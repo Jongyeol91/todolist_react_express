@@ -22,6 +22,16 @@ const todolist = [{
 const Todolist = () => {
   const [todos, setTodos] = useState(todolist);
 
+  const toggleCompletion = (id) => {
+    let updatedTodoList = todos.map(todo => {
+      if (todo.id === id) {
+        return {...todo, completed: !todo.completed};
+      }
+      return todo;
+    })
+    setTodos(updatedTodoList);
+  }
+
   const addTask = (userInput) => {
     let copy = [...todos];
     copy = [...copy, { id: todos.length + 1, task: userInput, completed: false }];
@@ -33,7 +43,7 @@ const Todolist = () => {
         <Form addTask={addTask}/>
         {todos.map((todo, i) => (
             <>
-              <Todo key={todo.id} todo={todo} />
+              <Todo key={todo.id} todo={todo} toggleCompletion={toggleCompletion} />
               { i < todos.length -1  && <hr/>}
             </>
         ))}
