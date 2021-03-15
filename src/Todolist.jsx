@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Todo from "./Todo";
+import Form from './Form'
 
-const todos = [{
+const todolist = [{
   id: 1,
   ref: null,
   task: '투두리스트 만들기',
@@ -19,8 +20,17 @@ const todos = [{
 ];
 
 const Todolist = () => {
+  const [todos, setTodos] = useState(todolist);
+
+  const addTask = (userInput) => {
+    let copy = [...todos];
+    copy = [...copy, { id: todos.length + 1, task: userInput, completed: false }];
+    setTodos(copy);
+  }
+
   return (
       <>
+        <Form addTask={addTask}/>
         {todos.map((todo, i) => (
             <>
               <Todo key={todo.id} todo={todo} />
