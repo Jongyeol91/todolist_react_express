@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Todo from "./Todo";
 import Form from './Form'
 
@@ -38,12 +38,16 @@ const Todolist = () => {
     setTodos(copy);
   }
 
+  const remove = (id) => {
+    setTodos(todos.filter(todo => todo.id !== id))
+  }
+
   return (
       <>
         <Form addTask={addTask}/>
         {todos.map((todo, i) => (
             <>
-              <Todo key={todo.id} todo={todo} toggleCompletion={toggleCompletion} />
+              <Todo key={todo.id} todo={todo} toggleCompletion={toggleCompletion} remove={remove} />
               { i < todos.length -1  && <hr/>}
             </>
         ))}
