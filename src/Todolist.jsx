@@ -22,7 +22,12 @@ const todolist = [{
 const Todolist = () => {
   const [todos, setTodos] = useState(todolist);
 
-  const toggleCompletion = (id) => {
+  const toggleCompletion = (id, ref) => {
+    if (todos.find(todo => todo.id == ref && todo.completed === false)) {
+      alert('참조하는 task를 먼저 완료해야 완료할 수 있습니다.');
+      return
+    }
+
     let updatedTodoList = todos.map(todo => {
       if (todo.id === id) {
         return {...todo, completed: !todo.completed};
@@ -34,12 +39,12 @@ const Todolist = () => {
 
   const addTask = (userInput) => {
     let copy = [...todos];
-    copy = [...copy, { id: todos.length + 1, task: userInput, completed: false }];
+    copy = [...copy, { id: todos.length + 1, task: userInput.task, ref: userInput.ref, completed: false }];
     setTodos(copy);
   }
 
-  const remove = (id) => {
-    setTodos(todos.filter(todo => todo.id !== id))
+  const removeTask = (id, ref) => {
+    setTodos(todos.filter( todo => todo.id !== id))
   }
 
   return (
@@ -47,7 +52,7 @@ const Todolist = () => {
         <Form addTask={addTask}/>
         {todos.map((todo, i) => (
             <>
-              <Todo key={todo.id} todo={todo} toggleCompletion={toggleCompletion} remove={remove} />
+              <Todo key={todo.id} todo={todo} toggleCompletion={toggleCompletion} removeTask={removeTask} />
               { i < todos.length -1  && <hr/>}
             </>
         ))}

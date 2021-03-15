@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, Form , Button, Checkbox} from 'antd';
+import { Input, Form , Button, Checkbox } from 'antd';
 
 const TodoForm = ({ addTask }) => {
 
@@ -18,7 +18,7 @@ const TodoForm = ({ addTask }) => {
     },
   };
   const onFinish = (values) => {
-    addTask(values.todo)
+    addTask(values)
   }
 
   const onFinishFailed = (errorInfo) => {
@@ -36,12 +36,24 @@ const TodoForm = ({ addTask }) => {
           onFinishFailed={onFinishFailed}
       >
         <Form.Item
-            label="todo"
-            name="todo"
+            label="task"
+            name="task"
             rules={[
               {
                 required: true,
                 message: '해야할 일을 입력',
+              },
+            ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+            label="ref"
+            name="ref"
+            rules={[
+              {
+                required: true,
+                message: '참조하는 Todo 입력',
               },
             ]}
         >

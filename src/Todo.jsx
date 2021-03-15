@@ -1,22 +1,25 @@
 import React from 'react';
-import { Checkbox, Button } from "antd";
+import {Checkbox, Button, Row, Col} from "antd";
 
-const Todo = ({ todo, toggleCompletion, remove }) => {
+const Todo = ({todo, toggleCompletion, removeTask}) => {
 
   const handleToggleCompletion = () => {
-    toggleCompletion(todo.id)
+    toggleCompletion(todo.id, todo.ref)
   }
 
   const handleRemove = () => {
-    remove(todo.id);
+    removeTask(todo.id, todo.ref);
   }
 
   return (
-      <div>
-        <h2>{todo.task}</h2>
-        <Checkbox checked={todo.completed} onChange={handleToggleCompletion}/>
-        <Button onClick={handleRemove}>삭제</Button>
-      </div>
+      <Row>
+        <Col span={24}>
+          <h2>{todo.id}. {todo.task}</h2>
+          <h3>{todo.ref && <span>@{todo.ref}</span>}</h3>
+          <Checkbox checked={todo.completed} onChange={handleToggleCompletion}/>
+          <Button onClick={handleRemove}>삭제</Button>
+        </Col>
+      </Row>
   )
 }
 
