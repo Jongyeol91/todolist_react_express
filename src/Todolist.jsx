@@ -3,15 +3,15 @@ import Todo from "./Todo";
 import Form from './Form'
 
 const todolist = [{
-  id: 1,
-  ref: null,
+  id: '1',
+  ref: [],
   task: '투두리스트 만들기',
   completed: false,
   created_at: '2021-03-13',
   updated_at: '2021-03-14',
 }, {
-  id: 2,
-  ref: null,
+  id: '2',
+  ref: [],
   task: '사탕사기',
   completed: false,
   created_at: '2021-03-14',
@@ -23,7 +23,7 @@ const Todolist = () => {
   const [todos, setTodos] = useState(todolist);
 
   const toggleCompletion = (id, ref) => {
-    if (todos.find(todo => todo.id == ref && todo.completed === false)) {
+    if (todos.find(todo => ref.includes(todo.id) && todo.completed === false)) {
       alert('참조하는 task를 먼저 완료해야 완료할 수 있습니다.');
       return
     }
@@ -39,7 +39,7 @@ const Todolist = () => {
 
   const addTask = (userInput) => {
     let copy = [...todos];
-    copy = [...copy, { id: todos.length + 1, task: userInput.task, ref: userInput.ref, completed: false }];
+    copy = [...copy, { id: todos.length + 1, task: userInput.task, ref: userInput.ref.split(','), completed: false }];
     setTodos(copy);
   }
 
