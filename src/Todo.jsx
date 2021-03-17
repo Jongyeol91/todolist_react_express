@@ -1,5 +1,5 @@
 import React from 'react';
-import {Checkbox, Button, Row, Col} from "antd";
+import { Checkbox, Button, Row, Col } from "antd";
 
 const Todo = ({todo, toggleCompletion, removeTask}) => {
 
