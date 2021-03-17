@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios'
 import Todo from "./Todo";
 import Form from './Form'
 
@@ -21,6 +22,45 @@ const todolist = [{
 
 const Todolist = () => {
   const [todos, setTodos] = useState(todolist);
+
+  // Fetch all books on initial render
+  useEffect(() => {
+    fetchTodolist()
+  }, [])
+
+  // Fetch all books
+  const fetchTodolist = async () => {
+    // Send GET request to 'books/all' endpoint
+    axios
+      .get('http://localhost:4001/todolist/all')
+      .then(response => {
+        // Update the books state
+        console.log(response.data)
+        setTodos(response.data)
+
+        // Update loading state
+        //setLoading(false)
+      })
+      .catch(error => console.error(`There was an error retrieving the book list: ${error}`))
+  }
+
+  // Create new book
+  const handleTodoCreate = (ref, task, completed) => {
+    // Send POST request to 'books/create' endpoint
+    axios
+      .post('http://localhost:4001/books/create', {
+        ref: ref,
+        task: task,
+        completed: completed,
+      })
+      .then(res => {
+        console.log(res.data)
+        // Fetch all books to refresh
+        // the books on the bookshelf list
+        fetchTodolist()
+      })
+      .catch(error => console.error(`There was an error creating the ${todolist} book: ${error}`))
+  }
 
   const toggleCompletion = (id, ref) => {
     if (todos.find(todo => ref.includes(todo.id) && todo.completed === false)) {
@@ -49,7 +89,7 @@ const Todolist = () => {
 
   return (
       <>
-        <Form addTask={addTask}/>
+        <Form addTask={addTask} handleBookCreate={handleTodoCreate}/>
         {todos.map((todo, i) => (
             <>
               <Todo key={todo.id} todo={todo} toggleCompletion={toggleCompletion} removeTask={removeTask} />

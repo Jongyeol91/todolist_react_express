@@ -1,7 +1,7 @@
 import React from "react";
 import { Input, Form , Button, Checkbox } from 'antd';
 
-const TodoForm = ({ addTask }) => {
+const TodoForm = ({ addTask, handleTodoCreate }) => {
 
   const layout = {
     labelCol: {
@@ -17,8 +17,11 @@ const TodoForm = ({ addTask }) => {
       span: 16,
     },
   };
+
+
   const onFinish = (values) => {
-    addTask(values)
+    addTask(values);
+    handleTodoCreate(values.ref, values.task, values.completed);
   }
 
   const onFinishFailed = (errorInfo) => {
