@@ -1,7 +1,7 @@
 import React from "react";
-import { Input, Form , Button, Checkbox } from 'antd';
+import {Input, Form, Button, Row, Checkbox} from 'antd';
 
-const TodoForm = ({ addTask, handleTodoCreate }) => {
+const TodoForm = ({addTask, handleTodoCreate}) => {
 
   const layout = {
     labelCol: {
@@ -20,6 +20,8 @@ const TodoForm = ({ addTask, handleTodoCreate }) => {
 
 
   const onFinish = (values) => {
+    console.log(values.ref)
+    console.log(values.task)
     addTask(values);
     handleTodoCreate(values.ref, values.task, values.completed);
   }
@@ -29,45 +31,47 @@ const TodoForm = ({ addTask, handleTodoCreate }) => {
   };
 
   return (
-      <Form
-          {...layout}
-          name="basic"
-          initialValues={{
-            remember: true,
-          }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-      >
-        <Form.Item
-            label="task"
-            name="task"
-            rules={[
-              {
-                required: true,
-                message: '해야할 일을 입력',
-              },
-            ]}
+      <Row>
+        <Form
+            {...layout}
+            name="basic"
+            initialValues={{
+              remember: true,
+            }}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
         >
-          <Input />
-        </Form.Item>
-        <Form.Item
-            label="ref"
-            name="ref"
-            rules={[
-              {
-                message: '참조하는 Todo 입력',
-              },
-            ]}
-        >
-          <Input />
-        </Form.Item>
+          <Form.Item
+              label="할일"
+              name="task"
+              rules={[
+                {
+                  required: true,
+                  message: '해야할 일을 입력',
+                },
+              ]}
+          >
+            <Input/>
+          </Form.Item>
+          <Form.Item
+              label="ref"
+              name="ref"
+              rules={[
+                {
+                  message: '참조하는 Todo 입력',
+                },
+              ]}
+          >
+            <Input/>
+          </Form.Item>
 
-        <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
+          <Form.Item {...tailLayout}>
+            <Button type="primary" htmlType="submit">
+              저장
+            </Button>
+          </Form.Item>
+        </Form>
+      </Row>
   )
 }
 

@@ -1,10 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios'
 import Todo from "./Todo";
 import Form from './Form'
+import Pagination from "./component/pagination";
 
 const Todolist = () => {
   const [todos, setTodos] = useState([]);
+
+  const [perPage] = useState(4);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // 페이지네이션
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const lastProductIdx = currentPage * perPage; // 마지막 상품 인덱스 = 현재 페이지 * 페이지당 상품 수
+  const firstProductIdx = lastProductIdx - perPage  // 첫번째 상품 인덱스  = 마지막 상품 인덱스 - 페이지당 상품 수
+  const currentTodos = todos.slice(firstProductIdx, lastProductIdx); // 현재 노출 상품들
 
   // Fetch all todolist on initial render
   useEffect(() => {
@@ -26,7 +36,7 @@ const Todolist = () => {
   }
 
   // Create new todo
-  const handleTodoCreate = async (ref, task, completed) => {
+  const handleTodoCreate = useCallback(async (ref, task, completed) => {
     // Send POST request to 'todolist/create' endpoint
     try {
       const response = await axios.post('http://localhost:4001/todolist/create', {
@@ -39,9 +49,9 @@ const Todolist = () => {
         fetchTodolist();
       }
     } catch (error) {
-      console.error(`There was an error creating the ${todos} book: ${error}`)
+      console.error(`There was an error creating the ${todos} todo: ${error}`)
     }
-  }
+  }, [todos])
 
   // Remove todo
   const handleTodoDelete = async (id, task) => {
@@ -100,16 +110,20 @@ const Todolist = () => {
   return (
       <>
         <Form addTask={addTask} handleTodoCreate={handleTodoCreate}/>
-        {todos.length > 0 && todos.map((todo, i) => (
+        {currentTodos.length > 0 && currentTodos.map((todo, i) => (
             <>
               <Todo key={todo.id}
                     todo={todo}
                     toggleCompletion={toggleCompletion}
                     handleTodoDelete={handleTodoDelete}
               />
-              { i < todos.length -1  && <hr/>}
             </>
         ))}
+        <Pagination
+            totalTodos={todos.length}
+            perPage={perPage}
+            paginate={paginate}
+        />
       </>
   )
 }
