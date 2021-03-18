@@ -55,7 +55,6 @@ const TodoForm = ({ addTask, handleTodoCreate }) => {
             name="ref"
             rules={[
               {
-                required: true,
                 message: '참조하는 Todo 입력',
               },
             ]}

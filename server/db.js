@@ -29,8 +29,8 @@ knex.schema
         table.increments('id').primary();
         table.string('ref');
         table.string('task');
-        table.string('completed');
-        table.timestamps();
+        table.integer('completed');
+        table.timestamp('createdAt').defaultTo(knex.fn.now());
       })
         .then(() => {
           // Log success message

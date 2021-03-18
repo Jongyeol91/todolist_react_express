@@ -1,14 +1,14 @@
 import React from 'react';
 import { Checkbox, Button, Row, Col } from "antd";
 
-const Todo = ({todo, toggleCompletion, removeTask}) => {
+const Todo = ({ todo, toggleCompletion, handleTodoDelete }) => {
 
-  const handleToggleCompletion = () => {
-    toggleCompletion(todo.id, todo.ref)
+  const handleToggleCompletion = (e) => {
+    toggleCompletion(todo.id, todo.ref, e.target.checked)
   }
 
-  const handleRemove = () => {
-    removeTask(todo.id, todo.ref);
+  const onRemove = () => {
+    handleTodoDelete(todo.id, todo.ref);
   }
 
   return (
@@ -17,7 +17,7 @@ const Todo = ({todo, toggleCompletion, removeTask}) => {
           <h2>{todo.id}. {todo.task}</h2>
           <h3>{todo.ref && <span>@{todo.ref}</span>}</h3>
           <Checkbox checked={todo.completed} onChange={handleToggleCompletion}/>
-          <Button onClick={handleRemove}>삭제</Button>
+          <Button onClick={onRemove}>삭제</Button>
         </Col>
       </Row>
   )

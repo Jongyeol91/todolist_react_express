@@ -1,21 +1,24 @@
 // todolist/server/routes/todolist-route.js
 
 // Import express
-const express = require('express')
+const express = require('express');
 
 // Import todolist-controller
-const todolistRoutes = require('./../controllers/todolist.js')
+const todolistRoutes = require('./../controllers/todolist.js');
 
 // Create router
-const router = express.Router()
+const router = express.Router();
 
-router.get('/all', todolistRoutes.todolistAll)
+router.get('/all', todolistRoutes.todolistAll);
 
-router.post('/create', todolistRoutes.todolistCreate)
+router.post('/create', todolistRoutes.todolistCreate);
 
-router.put('/delete', todolistRoutes.todolistDelete)
+router.put('/delete', todolistRoutes.todolistDelete);
 
-router.put('/reset', todolistRoutes.todolistReset)
+router.put('/update', todolistRoutes.todolistUpdate);
+
+router.put('/reset', todolistRoutes.todolistReset);
+
 
 // Export router
-module.exports = router
+module.exports = router;
