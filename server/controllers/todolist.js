@@ -57,9 +57,9 @@ exports.todolistDelete = async (req, res) => {
 // update todolist
 exports.todolistUpdate = async (req, res) => {
   console.log(req.body)
-  knex
+  knex('todolist')
     .where('id', req.body.id)
-    .update('completed', req.body.completed)
+    .update({'completed': req.body.completed})
     .then(() => {
       // Send a success message in response
       res.json({ message: 'todolist updated.' })

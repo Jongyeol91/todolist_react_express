@@ -81,14 +81,14 @@ const Todolist = () => {
       console.error(`There was an error removing the ${id} todolist: ${error}`)
     }
 
-
-    let updatedTodoList = todos.map(todo => {
-      if (todo.id === id) {
-        return {...todo, completed: !todo.completed};
-      }
-      return todo;
-    })
-    setTodos(updatedTodoList);
+    //
+    // let updatedTodoList = todos.map(todo => {
+    //   if (todo.id === id) {
+    //     return {...todo, completed: !todo.completed};
+    //   }
+    //   return todo;
+    // })
+    // setTodos(updatedTodoList);
   }
 
   const addTask = (userInput) => {
