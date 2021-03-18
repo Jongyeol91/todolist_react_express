@@ -1,5 +1,5 @@
 import React from "react";
-import {Input, Form, Button, Row, Checkbox} from 'antd';
+import {Input, Form, Button, Row} from 'antd';
 
 const TodoForm = ({addTask, handleTodoCreate}) => {
 
@@ -54,7 +54,7 @@ const TodoForm = ({addTask, handleTodoCreate}) => {
             <Input/>
           </Form.Item>
           <Form.Item
-              label="ref"
+              label="참조"
               name="ref"
               rules={[
                 {
@@ -64,7 +64,6 @@ const TodoForm = ({addTask, handleTodoCreate}) => {
           >
             <Input/>
           </Form.Item>
-
           <Form.Item {...tailLayout}>
             <Button type="primary" htmlType="submit">
               저장

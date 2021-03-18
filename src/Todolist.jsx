@@ -12,9 +12,9 @@ const Todolist = () => {
 
   // 페이지네이션
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-  const lastProductIdx = currentPage * perPage; // 마지막 상품 인덱스 = 현재 페이지 * 페이지당 상품 수
-  const firstProductIdx = lastProductIdx - perPage  // 첫번째 상품 인덱스  = 마지막 상품 인덱스 - 페이지당 상품 수
-  const currentTodos = todos.slice(firstProductIdx, lastProductIdx); // 현재 노출 상품들
+  const lastTodoIdx = currentPage * perPage; // 마지막 투두 인덱스 = 현재 페이지 * 페이지당 투두 수
+  const firstTodoIdx = lastTodoIdx - perPage  // 첫번째 투두 인덱스  = 마지막 투두 인덱스 - 페이지당 투두 수
+  const currentTodos = todos.slice(firstTodoIdx, lastTodoIdx); // 현재 노출 투두들
 
   // Fetch all todolist on initial render
   useEffect(() => {
@@ -22,7 +22,7 @@ const Todolist = () => {
   }, [])
 
   // Fetch all todo
-  const fetchTodolist = async () => {
+  const fetchTodolist = useCallback(async () => {
     // Send GET request to 'todolist/all' endpoint
     try {
       const response = await axios.get('http://localhost:4001/todolist/all');
@@ -33,7 +33,7 @@ const Todolist = () => {
     } catch (error) {
       console.error(`There was an error retrieving the todolist: ${error}`)
     }
-  }
+  }, [todos])
 
   // Create new todo
   const handleTodoCreate = useCallback(async (ref, task, completed) => {
@@ -51,10 +51,10 @@ const Todolist = () => {
     } catch (error) {
       console.error(`There was an error creating the ${todos} todo: ${error}`)
     }
-  }, [todos])
+  }, [todos]);
 
   // Remove todo
-  const handleTodoDelete = async (id, task) => {
+  const handleTodoDelete = useCallback(async (id, task) => {
     // Send PUT request to 'todolist/delete' endpoint
     try {
       const response = await axios.put('http://localhost:4001/todolist/delete', { id: id });
@@ -65,13 +65,13 @@ const Todolist = () => {
     } catch (error) {
       console.error(`There was an error removing the ${task} todolist: ${error}`)
     }
-  }
+  },[todos])
 
   // update todo
-  const toggleCompletion = async (id, ref, completed) => {
+  const toggleCompletion = useCallback(async (id, ref, completed) => {
     console.log(ref, completed)
     if (ref) {
-      let refArr = ref.split('').map(el => parseInt(el, 10));
+      let refArr = ref.split().map(el => parseInt(el, 10));
       console.log(refArr);
       console.log(completed);
 
@@ -90,22 +90,13 @@ const Todolist = () => {
     } catch (error) {
       console.error(`There was an error removing the ${id} todolist: ${error}`)
     }
+  },[todos])
 
-    //
-    // let updatedTodoList = todos.map(todo => {
-    //   if (todo.id === id) {
-    //     return {...todo, completed: !todo.completed};
-    //   }
-    //   return todo;
-    // })
-    // setTodos(updatedTodoList);
-  }
-
-  const addTask = (userInput) => {
+  const addTask = useCallback((userInput) => {
     let copy = [...todos];
     copy = [...copy, { id: todos.length + 1, task: userInput.task, ref: userInput.ref && userInput.ref.split(','), completed: false }];
     setTodos(copy);
-  }
+  },[todos])
 
   return (
       <>
