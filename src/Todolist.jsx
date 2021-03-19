@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios'
+import {Row} from 'antd'
 import Todo from "./Todo";
 import Form from './Form'
 import Pagination from "./component/pagination";
+import Search from "./component/Search";
 
 const baseUri = 'http://localhost:4001/todolist';
 
 const Todolist = () => {
   const [todos, setTodos] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const [perPage] = useState(4);
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,7 +19,7 @@ const Todolist = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const lastTodoIdx = currentPage * perPage; // 마지막 투두 인덱스 = 현재 페이지 * 페이지당 투두 수
   const firstTodoIdx = lastTodoIdx - perPage  // 첫번째 투두 인덱스  = 마지막 투두 인덱스 - 페이지당 투두 수
-  const currentTodos = todos.slice(firstTodoIdx, lastTodoIdx); // 현재 노출 투두들
+  let currentTodos = !searchTerm ? todos.slice(firstTodoIdx, lastTodoIdx): todos; // 현재 노출 투두들 (검색시에는 페이지네이션 적용 x)
 
 
   // Fetch all todolist on initial render
@@ -100,8 +103,14 @@ const Todolist = () => {
 
   return (
       <>
-        <Form addTask={addTask} handleTodoCreate={handleTodoCreate}/>
-        {currentTodos.length > 0 && currentTodos.map((todo, i) => (
+        <Form
+          addTask={addTask}
+          handleTodoCreate={handleTodoCreate}
+        />
+        <Search setSearchTerm={setSearchTerm}/>
+        {currentTodos.length > 0 && currentTodos.filter(todo => {
+          return !searchTerm ? todo : todo.task.toLowerCase().includes(searchTerm.toLowerCase())
+        }).map((todo, i) => (
             <>
               <Todo key={todo.id}
                     todo={todo}
