@@ -4,6 +4,8 @@ import Todo from "./Todo";
 import Form from './Form'
 import Pagination from "./component/pagination";
 
+const baseUri = 'http://localhost:4001/todolist';
+
 const Todolist = () => {
   const [todos, setTodos] = useState([]);
 
@@ -16,6 +18,7 @@ const Todolist = () => {
   const firstTodoIdx = lastTodoIdx - perPage  // 첫번째 투두 인덱스  = 마지막 투두 인덱스 - 페이지당 투두 수
   const currentTodos = todos.slice(firstTodoIdx, lastTodoIdx); // 현재 노출 투두들
 
+
   // Fetch all todolist on initial render
   useEffect(() => {
     fetchTodolist()
@@ -25,7 +28,7 @@ const Todolist = () => {
   const fetchTodolist = useCallback(async () => {
     // Send GET request to 'todolist/all' endpoint
     try {
-      const response = await axios.get('http://localhost:4001/todolist/all');
+      const response = await axios.get(baseUri);
       if (response) {
         console.log(response.data)
         setTodos(response.data)
@@ -39,7 +42,7 @@ const Todolist = () => {
   const handleTodoCreate = useCallback(async (ref, task, completed) => {
     // Send POST request to 'todolist/create' endpoint
     try {
-      const response = await axios.post('http://localhost:4001/todolist/create', {
+      const response = await axios.post(baseUri, {
         ref: ref,
         task: task,
         completed: completed,
@@ -57,7 +60,7 @@ const Todolist = () => {
   const handleTodoDelete = useCallback(async (id, task) => {
     // Send PUT request to 'todolist/delete' endpoint
     try {
-      const response = await axios.put('http://localhost:4001/todolist/delete', { id: id });
+      const response = await axios.delete(`${baseUri}?id=${id}`);
       if (response) {
         console.log(`todolist ${task} removed.`)
         fetchTodolist()
@@ -69,11 +72,8 @@ const Todolist = () => {
 
   // update todo
   const toggleCompletion = useCallback(async (id, ref, completed) => {
-    console.log(ref, completed)
     if (ref) {
       let refArr = ref.split().map(el => parseInt(el, 10));
-      console.log(refArr);
-      console.log(completed);
 
       if (todos.find(todo => refArr.includes(todo.id) && !todo.completed)) {
         alert('참조하는 task를 먼저 완료해야 완료할 수 있습니다.');
@@ -82,7 +82,7 @@ const Todolist = () => {
     }
 
     try {
-      const response = await axios.put('http://localhost:4001/todolist/update', { id: id, completed: completed ? 1 : 0 });
+      const response = await axios.put(baseUri, { id: id, completed: completed ? 1 : 0 });
       if (response) {
         console.log(`todolist ${id} updated.`)
         fetchTodolist()

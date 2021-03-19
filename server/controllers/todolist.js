@@ -42,7 +42,7 @@ exports.todolistCreate = async (req, res) => {
 exports.todolistDelete = async (req, res) => {
   // Find specific todolist in the database and remove it
   knex('todolist')
-    .where('id', req.body.id) // find correct record based on id
+    .where('id', req.query.id) // find correct record based on id
     .del() // delete the record
     .then(() => {
       // Send a success message in response

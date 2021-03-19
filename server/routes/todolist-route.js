@@ -9,15 +9,15 @@ const todolistRoutes = require('./../controllers/todolist.js');
 // Create router
 const router = express.Router();
 
-router.get('/all', todolistRoutes.todolistAll);
+router.get('/', todolistRoutes.todolistAll);
 
-router.post('/create', todolistRoutes.todolistCreate);
+router.post('/', todolistRoutes.todolistCreate);
 
-router.put('/delete', todolistRoutes.todolistDelete);
+router.delete('/', todolistRoutes.todolistDelete);
 
-router.put('/update', todolistRoutes.todolistUpdate);
+router.put('/', todolistRoutes.todolistUpdate);
 
-router.put('/reset', todolistRoutes.todolistReset);
+router.delete('/reset', todolistRoutes.todolistReset);
 
 
 // Export router
