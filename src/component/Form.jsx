@@ -1,7 +1,7 @@
 import React from "react";
-import {Input, Form, Button, Row} from 'antd';
+import { Input, Form, Button, Row } from 'antd';
 
-const TodoForm = ({addTask, handleTodoCreate}) => {
+const TodoForm = ({ addTask, handleTodoCreate }) => {
 
   const layout = {
     labelCol: {
@@ -21,9 +21,9 @@ const TodoForm = ({addTask, handleTodoCreate}) => {
 
   const onFinish = (values) => {
     console.log(values.ref)
-    console.log(values.task)
-    addTask(values);
-    handleTodoCreate(values.ref, values.task, values.completed);
+    console.log(values.todo)
+    // addTask(values);
+    handleTodoCreate(values.todo, values.ref, values.completed);
   }
 
   const onFinishFailed = (errorInfo) => {
@@ -43,7 +43,7 @@ const TodoForm = ({addTask, handleTodoCreate}) => {
         >
           <Form.Item
               label="할일"
-              name="task"
+              name="todo"
               rules={[
                 {
                   required: true,

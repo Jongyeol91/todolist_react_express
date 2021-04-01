@@ -25,12 +25,12 @@ exports.todolistCreate = async (req, res) => {
   knex('todolist')
     .insert({ // insert new record, a book
       'ref': req.body.ref,
-      'task': req.body.task,
+      'todo': req.body.todo,
       'completed': req.body.completed,
     })
     .then(() => {
       // Send a success message in response
-      res.json({ message: `todolist \'${req.body.task}\' ref ${req.body.ref}` })
+      res.json({ message: `todolist \'${req.body.todo}\' ref ${req.body.ref}` })
     })
     .catch(err => {
       // Send a error message in response

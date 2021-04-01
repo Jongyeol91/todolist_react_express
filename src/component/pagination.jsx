@@ -23,9 +23,7 @@ const Pagination = ({ perPageTodos, totalTodos, paginate, currentPage, minPageNu
           if (minPageNum < number && maxPageNum >= number) { // 페이지네이션 숫자(버튼) 노출 범위 (1~5)
             return (
                 <StyledDiv key={number} color={number === currentPage ? 'lightgray' : null} onClick={() => paginate(number)}>
-                  <a href='#none'>
                     {number}
-                  </a>
                 </StyledDiv>
             )
           }

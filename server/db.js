@@ -28,7 +28,7 @@ knex.schema
       return knex.schema.createTable('todolist', (table)  => {
         table.increments('id').primary();
         table.string('ref');
-        table.string('task');
+        table.string('todo');
         table.integer('completed');
         table.timestamp('createdAt').defaultTo(knex.fn.now());
       })

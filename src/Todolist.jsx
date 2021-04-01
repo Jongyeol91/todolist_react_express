@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios'
-import Todo from "./Todo";
-import Form from './Form'
+import Todo from "./component/Todo";
+import Form from './component/Form'
 import Pagination from "./component/pagination";
 import Search from "./component/Search";
 
@@ -48,13 +48,13 @@ const Todolist = () => {
   }, [todos]);
 
   // Create new todo
-  const handleTodoCreate = useCallback(async (ref, task, completed) => {
+  const handleTodoCreate = useCallback(async (todo, ref, completed) => {
     // Send POST request to 'todolist/create' endpoint
     try {
       const response = await axios.post(baseUri, {
+        todo: todo,
         ref: ref,
-        task: task,
-        completed: completed,
+        completed: completed
       });
       if (response) {
         console.log(response.data)
@@ -66,26 +66,26 @@ const Todolist = () => {
   }, [todos]);
 
   // Remove todo
-  const handleTodoDelete = useCallback(async (id, task) => {
+  const handleTodoDelete = useCallback(async (id, todo) => {
     // Send PUT request to 'todolist/delete' endpoint
     try {
       const response = await axios.delete(`${baseUri}?id=${id}`);
       if (response) {
-        console.log(`todolist ${task} removed.`)
+        console.log(`todolist ${todo} removed.`)
         fetchTodolist()
       }
     } catch (error) {
-      console.error(`There was an error removing the ${task} todolist: ${error}`)
+      console.error(`There was an error removing the ${todo} todolist: ${error}`)
     }
   },[todos]);
 
   // update todo
-  const toggleCompletion = useCallback(async (id, ref, completed) => {
+  const handleTodoCompletion = useCallback(async (id, ref, completed) => {
     if (ref) {
       let refArr = ref.split().map(el => parseInt(el, 10));
 
       if (todos.find(todo => refArr.includes(todo.id) && !todo.completed)) {
-        alert('참조하는 task를 먼저 완료해야 완료할 수 있습니다.');
+        alert('참조하는 todo를 먼저 완료해야 완료할 수 있습니다.');
         return
       }
     }
@@ -142,13 +142,13 @@ const Todolist = () => {
           return (
               !searchTerm
               ? todo
-              : todo.task.toLowerCase().includes(searchTerm.toLowerCase())
+              : todo.todo.toLowerCase().includes(searchTerm.toLowerCase())
           )
         }).map((todo, i) => (
             <>
               <Todo key={todo.id}
                     todo={todo}
-                    toggleCompletion={toggleCompletion}
+                    handleTodoCompletion={handleTodoCompletion}
                     handleTodoDelete={handleTodoDelete}
               />
             </>
