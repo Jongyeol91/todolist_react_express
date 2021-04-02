@@ -1,27 +1,39 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import axios from 'axios'
 import Todo from "./component/Todo";
 import Form from './component/Form'
 import Pagination from "./component/pagination";
 import Search from "./component/Search";
+import { getTodos } from "./reducers/todolist";
 
 const baseUri = 'http://localhost:4001/todolist';
 
 const Todolist = () => {
-  const [todos, setTodos] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const todos = useSelector(state => state.todos.todos);
+  const dispatch = useDispatch();
 
+  // const [todos, setTodos] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [perPageTodos] = useState(4); // 페이지당 투두리스트 수
   const [perPageNum] = useState(5); // 페이지당 페이지네이션 숫자
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호
   const [maxPageNum, setMaxPageNum] = useState(5); // 마지막 페이지 번호
   const [minPageNum, setMinPageNum] = useState(0); // 처음 페이지 번호
 
-  // 페이지네이션
+  useEffect(() => {
+    dispatch(getTodos());
+    //fetchTodolist()
+  }, []);
+  //
+  // useEffect(() => {
+  //
+  // }, [todos])
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const lastTodoIdx = currentPage * perPageTodos; // 마지막 투두 인덱스 = 현재 페이지 * 페이지당 투두 수
   const firstTodoIdx = lastTodoIdx - perPageTodos  // 첫번째 투두 인덱스  = 마지막 투두 인덱스 - 페이지당 투두 수
-  let currentTodos = !searchTerm ? todos.slice(firstTodoIdx, lastTodoIdx) : todos; // 현재 노출 투두들 (검색시에는 페이지네이션 적용 x)
+  const currentTodos = !searchTerm ? todos.slice(firstTodoIdx, lastTodoIdx) : todos; // 현재 노출 투두들 (검색시에는 페이지네이션 적용 x)
+  // 페이지네이션
 
   const pages = [];
   for (let i = 1; i <= Math.ceil(todos.length / perPageTodos); i++) {
@@ -29,9 +41,7 @@ const Todolist = () => {
   }
 
   // Fetch all todolist on initial render
-  useEffect(() => {
-    fetchTodolist()
-  }, []);
+
 
   // Fetch all todo
   const fetchTodolist = useCallback(async () => {
@@ -40,7 +50,7 @@ const Todolist = () => {
       const response = await axios.get(baseUri);
       if (response) {
         console.log(response.data)
-        setTodos(response.data)
+        //setTodos(response.data)
       }
     } catch (error) {
       console.error(`There was an error retrieving the todolist: ${error}`)
@@ -58,7 +68,7 @@ const Todolist = () => {
       });
       if (response) {
         console.log(response.data)
-        fetchTodolist();
+        dispatch(getTodos());
       }
     } catch (error) {
       console.error(`There was an error creating the ${todos} todo: ${error}`)
@@ -72,7 +82,7 @@ const Todolist = () => {
       const response = await axios.delete(`${baseUri}?id=${id}`);
       if (response) {
         console.log(`todolist ${todo} removed.`)
-        fetchTodolist()
+        dispatch(getTodos());
       }
     } catch (error) {
       console.error(`There was an error removing the ${todo} todolist: ${error}`)
@@ -94,18 +104,18 @@ const Todolist = () => {
       const response = await axios.put(baseUri, { id: id, completed: completed ? 1 : 0 });
       if (response) {
         console.log(`todolist ${id} updated.`)
-        fetchTodolist()
+        dispatch(getTodos());
       }
     } catch (error) {
       console.error(`There was an error removing the ${id} todolist: ${error}`)
     }
   },[todos]);
 
-  const addTask = useCallback((userInput) => {
-    let copy = [...todos];
-    copy = [...copy, { id: todos.length + 1, task: userInput.task, ref: userInput.ref && userInput.ref.split(','), completed: false }];
-    setTodos(copy);
-  },[todos]);
+  // const addTask = useCallback((userInput) => {
+  //   let copy = [...todos];
+  //   copy = [...copy, { id: todos.length + 1, task: userInput.task, ref: userInput.ref && userInput.ref.split(','), completed: false }];
+  //   setTodos(copy);
+  // },[todos]);
 
   const handleNext = () => {
     if (currentPage < Math.ceil(todos.length / perPageTodos)) {
@@ -134,7 +144,6 @@ const Todolist = () => {
   return (
       <>
         <Form
-          addTask={addTask}
           handleTodoCreate={handleTodoCreate}
         />
         <Search setSearchTerm={setSearchTerm} />
