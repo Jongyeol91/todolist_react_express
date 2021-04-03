@@ -1,76 +1,84 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
     todos: [],
     loading: false,
+    error: null
 };
 const baseUri = 'http://localhost:4001/todolist';
 
-export const getTodos = createAsyncThunk('todos/getTodos', async () => {
-    try {
+export const getTodos = createAsyncThunk('todos/getTodos', async (data, thunkAPI) => {
+        console.log('DATA', data);
         const response = await axios.get(baseUri);
-        console.log('1', response.data)
         return response.data;
-    } catch (e) {
-        console.error(e);
-    }
+})
+
+export const createTodo = createAsyncThunk('todos/createTodo', async (data) => {
+    console.log(data)
+        const response = await axios.post(baseUri, {
+            todo: data.todo,
+            ref: data.ref,
+            completed: data.completed
+        })
+        return response.data;
+})
+
+export const deleteTodo = createAsyncThunk('todos/deleteTodo', async (data) => {
+    const response = await axios.delete(`${baseUri}?id=${data.id}`);
+    return response.data;
+})
+
+export const completeTodo = createAsyncThunk('todos/completeTodo', async (data) => {
+    const response = await axios.put(baseUri, { id: data.id, completed: data.completed ? 1 : 0 });
+    return response.data;
 })
 
 const todolistSlice = createSlice({
     name: 'todos',
     initialState,
     reducers: {
-        create: {
-            reducer: (state, {payload}) => {
-                state.push({
-                    id: payload.id,
-                    ref: payload.ref,
-                    todo: payload.todo,
-                    completed: payload.completed,
-                    createdAt: payload.createdAt
-                });
-            },
-        },
-        edit: (state, {payload}) => {
-            const todoToEdit = state.find(todo => todo.id === payload.id);
-            if (todoToEdit) {
-                todoToEdit.count = payload.count;
-            }
-        },
-        completed: (state, {payload}) => {
-            const todoToCompleted = state.find(todo => todo.id === payload.id);
-            if (todoToCompleted) {
-                todoToCompleted.completed = payload.completed;
-            }
-        },
-        remove: (state, {payload}) => {
-            const index = state.findIndex(todo => todo.id === payload.id);
-            if (index !== -1) {
-                state.splice(index, 1);
-            }
-        }
-    },
-    extraReducers: {
-        [getTodos.fulfilled]: (state, {payload}) => {
-            console.log(payload)
-            state.todos = payload;
-            state.loading = false;
-        },
-        [getTodos.pending]: (state) => {
-            state.loading = true;
-        },
-        [getTodos.rejected]: (state) => {
-            state.loading = false;
-        }
-    }
-})
 
-export const {
-    create: createCartProductActionCreator,
-    edit: editCartProductActionCreator,
-    toggle: toggleCartProductActionCreator,
-    remove: deleteCartProductActionCreator
-} = todolistSlice.actions;
+    },
+    extraReducers: (builder) => builder
+        .addCase(getTodos.fulfilled, (state, action ) => {
+            state.todos = action.payload;
+            state.loading = false;
+            state.error = false;
+        })
+        .addCase(getTodos.rejected, (state ) => {
+            state.loading = false;
+            state.error = true
+        })
+        .addCase(createTodo.fulfilled, (state, action ) => {
+            state.loading = false;
+            state.error = false;
+        })
+        .addCase(createTodo.rejected, (state ) => {
+            state.loading = false;
+            state.error = true
+        })
+        .addCase(deleteTodo.fulfilled, (state, action ) => {
+            state.loading = false;
+            state.error = false;
+        })
+        .addCase(deleteTodo.rejected, (state ) => {
+            state.loading = false;
+            state.error = true
+        })
+        .addCase(completeTodo.fulfilled, (state, action ) => {
+            state.loading = false;
+            state.error = false;
+        })
+        .addCase(completeTodo.rejected, (state ) => {
+            state.loading = false;
+            state.error = true
+        })
+        .addMatcher((action) => {
+            return action.type.includes('/pending');
+        }, (state, action) => {
+            state.loading = true;
+        })
+})
 
 export default todolistSlice;
