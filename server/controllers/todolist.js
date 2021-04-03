@@ -9,6 +9,7 @@ exports.todolistAll = async (req, res) => {
   knex
     .select('*')
     .from('todolist')
+    .orderBy('id','desc')
     .then(userData => {
       // Send todolist extracted from database in response
       res.json(userData)
