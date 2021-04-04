@@ -34,6 +34,7 @@ const Todolist = () => {
 
   // Create new todo
   const handleTodoCreate = useCallback(async (todo, ref, completed) => {
+    console.log(ref)
     const data = {todo, ref, completed}
     await dispatch(createTodo(data));
     dispatch(getTodos());
@@ -48,8 +49,8 @@ const Todolist = () => {
 
   // update todo
   const handleTodoCompletion = useCallback(async (id, ref, completed) => {
-    if (ref) {
-      let refArr = ref.split().map(el => parseInt(el, 10));
+    if (ref && completed == 1) {
+      let refArr = ref.split(',').map(el => parseInt(el, 10));
       if (todos.find(todo => refArr.includes(todo.id) && !todo.completed)) {
         alert('참조하는 todo를 먼저 완료해야 완료할 수 있습니다.');
         return

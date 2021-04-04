@@ -1,7 +1,13 @@
-import React from "react";
-import { Input, Form, Button, Row } from 'antd';
+import React, { useState } from "react";
+import { Input, Form, Button, Row, Select } from 'antd';
+import { useSelector } from "react-redux";
+
+const { Option } = Select;
 
 const TodoForm = ({ handleTodoCreate }) => {
+  const todos = useSelector(state => state.todos.todos)
+
+  const [ref, setRef] = useState(new Set());
 
   const layout = {
     labelCol: {
@@ -18,12 +24,18 @@ const TodoForm = ({ handleTodoCreate }) => {
     },
   };
 
+  // 셀렉박스 참조 선택
+  function handleChange(newRef) {
+      setRef(previousState => new Set([...ref, newRef]))
+    console.log(`selected ${newRef}`);
+  }
+
 
   const onFinish = (values) => {
-
-    // addTask(values);
-    handleTodoCreate(values.todo, values.ref, values.completed);
+    handleTodoCreate(values.todo, ref, values.completed);
+    setRef(new Set());
   }
+
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
@@ -55,14 +67,21 @@ const TodoForm = ({ handleTodoCreate }) => {
           <Form.Item
               label="참조"
               name="ref"
-              rules={[
-                {
-                  message: '참조하는 Todo 입력',
-                },
-              ]}
           >
-            <Input/>
+            <Select defaultValue='없음' style={{ width: 120 }} onChange={handleChange}>
+              {todos.map(cv => {
+                return (
+                  <Option key={cv.id + '_' + cv.todo} value={cv.id}>{cv.id + ": " + cv.todo}</Option>
+                )
+              })}
+            </Select>
+            {[...ref].map(cv => {
+            return(
+                <div>@{cv}</div>
+            )
+            })}
           </Form.Item>
+
           <Form.Item {...tailLayout}>
             <Button type="primary" htmlType="submit">
               저장

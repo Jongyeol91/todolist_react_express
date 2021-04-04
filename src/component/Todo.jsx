@@ -16,7 +16,7 @@ const Todo = ({ todo, handleTodoCompletion, handleTodoDelete }) => {
       <Row>
         <Col span={10}>
         <Card title={todo.id + '. ' + todo.todo}>
-          <p>{todo.ref && <span>@{todo.ref}</span>}</p>
+          <p>{todo.ref && <span>{todo.ref.split(',').map(cv => (<span>@{cv}</span>))}</span>}</p>
           완료: <Checkbox checked={todo.completed} onChange={onTodoCompletion}/>
           <p>작성일:{moment(todo.createdAt).format('YYYY-MM-DD')}</p>
           <Button onClick={onRemove}>삭제</Button>

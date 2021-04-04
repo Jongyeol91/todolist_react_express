@@ -8,8 +8,7 @@ const initialState = {
 };
 const baseUri = 'http://localhost:4001/todolist';
 
-export const getTodos = createAsyncThunk('todos/getTodos', async (data, thunkAPI) => {
-        console.log('DATA', data);
+export const getTodos = createAsyncThunk('todos/getTodos', async () => {
         const response = await axios.get(baseUri);
         return response.data;
 })
@@ -18,7 +17,7 @@ export const createTodo = createAsyncThunk('todos/createTodo', async (data) => {
     console.log(data)
         const response = await axios.post(baseUri, {
             todo: data.todo,
-            ref: data.ref,
+            ref: [...data.ref],
             completed: data.completed
         })
         return response.data;
