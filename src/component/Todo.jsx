@@ -16,14 +16,14 @@ const Todo = ({ todo, handleTodoCompletion, handleTodoDelete }) => {
   }
 
   const onUpdate = () => {
-    dispatch(getUpdateTodoActionCreator({todo}));
+    dispatch(getUpdateTodoActionCreator({id: todo.id, todo: todo.todo, ref: todo.ref.length > 1 && todo.ref}));
   }
 
   return (
       <Row>
         <Col span={10}>
         <Card title={todo.id + '. ' + todo.todo}>
-          <p>{todo.ref && <span>{todo.ref.split(',').map(cv => (<span>@{cv} </span>))}</span>}</p>
+          <p>{todo.ref.length > 0 && <span>{todo.ref.split(',').map(cv => (<span>@{cv} </span>))}</span>}</p>
           완료: <Checkbox checked={todo.completed} onChange={onTodoCompletion}/>
           <p>작성일:{moment(todo.createdAt).format('YYYY-MM-DD')}</p>
           <Button onClick={onRemove}>삭제</Button>

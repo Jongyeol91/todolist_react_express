@@ -56,6 +56,22 @@ exports.todolistDelete = async (req, res) => {
     })
 }
 
+// complete todolist
+exports.todolistComplete = async (req, res) => {
+  console.log("complete: req.body", req.body);
+  knex('todolist')
+      .where('id', req.body.id)
+      .update({'completed': req.body.completed})
+      .then(() => {
+        // Send a success message in response
+        res.json({ message: 'todolist completed.' })
+      })
+      .catch(err => {
+        // Send a error message in response
+        res.json({ message: `There was an error resetting todolist: ${err}.` })
+      })
+}
+
 // update todolist
 exports.todolistUpdate = async (req, res) => {
   console.log("update: req.body", req.body);

@@ -33,7 +33,7 @@ export const deleteTodo = createAsyncThunk('todos/deleteTodo', async (data) => {
 
 export const completeTodo = createAsyncThunk('todos/completeTodo', async (data) => {
     console.log(data)
-    const response = await axios.put(baseUri, { id: data.id, completed: data.completed ? 1 : 0 });
+    const response = await axios.patch(baseUri, { id: data.id, completed: data.completed ? 1 : 0 });
     return response.data;
 })
 
@@ -47,11 +47,11 @@ const todolistSlice = createSlice({
     initialState,
     reducers: {
         getUpdateTodo: (state , action) => {
-            state.editingTodo = action.payload.todo
+            state.editingTodo = action.payload
         },
         clearUpdate: (state, action) => {
             state.editingTodo.todo = ''
-            state.editingTodo.ref = ''
+            state.editingTodo.ref = []
         }
     },
     extraReducers: (builder) => builder

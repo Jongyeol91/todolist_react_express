@@ -15,9 +15,11 @@ router.post('/', todolistRoutes.todolistCreate);
 
 router.delete('/', todolistRoutes.todolistDelete);
 
+router.patch('/', todolistRoutes.todolistComplete);
+
 router.put('/', todolistRoutes.todolistUpdate);
 
-router.delete('/reset', todolistRoutes.todolistReset);
+// router.delete('/reset', todolistRoutes.todolistReset);
 
 
 // Export router
