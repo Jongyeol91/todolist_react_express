@@ -39,7 +39,7 @@ const TodoForm = ({ handleTodoCreate }) => {
 
   // 셀렉박스 참조 선택
   function onChangeSelect(e) {
-    if (editingTodo.ref && editingTodo.id == e.target.value) {
+    if (editingTodo.id == e.target.value) {
         alert('스스로를 먼저해야 할 일에 넣을 수 없습니다.');
         return
     }
