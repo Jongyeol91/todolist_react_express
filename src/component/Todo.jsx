@@ -16,7 +16,7 @@ const Todo = ({ todo, handleTodoCompletion, handleTodoDelete }) => {
   }
 
   const onUpdate = () => {
-    dispatch(getUpdateTodoActionCreator({id: todo.id, todo: todo.todo, ref: todo.ref.length > 1 && todo.ref}));
+    dispatch(getUpdateTodoActionCreator({id: todo.id, todo: todo.todo, ref: todo.ref}));
   }
 
   return (

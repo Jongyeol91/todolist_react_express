@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Row } from 'antd';
+import { DeleteOutlined }from '@ant-design/icons';
 import { useDispatch, useSelector } from "react-redux";
 import styled from 'styled-components'
 import useInput from "../hooks/useInput";
@@ -33,15 +34,23 @@ const TodoForm = ({ handleTodoCreate }) => {
   useEffect(() => {
     if (editingTodo.todo) {
       setTodo(editingTodo.todo)
-      editingTodo.ref && setRef(previousState => new Set([...editingTodo.ref.split(',')]))
+      editingTodo.ref ? setRef(previousState => new Set([...editingTodo.ref.split(',')])) : setRef([])
     }
   }, [editingTodo])
 
   // 셀렉박스 참조 선택
   function onChangeSelect(e) {
+    console.log(e.target.value)
+    console.log(editingTodo.id)
+
+    if (todo.length < 1) {
+      alert('할일을 먼저 입력하세요');
+      return;
+    }
+
     if (editingTodo.id == e.target.value) {
-        alert('스스로를 먼저해야 할 일에 넣을 수 없습니다.');
-        return
+      alert('스스로를 먼저해야 할 일에 넣을 수 없습니다.');
+      return
     }
     setRef(previousState => new Set([...ref, e.target.value]))
     console.log(`selected ${e.target.value}`);
@@ -64,6 +73,11 @@ const TodoForm = ({ handleTodoCreate }) => {
     setRef(new Set());
   }
 
+  const deleteTempRef = (refId) => {
+    console.log(refId)
+    setRef(new Set([...ref].filter(cv => cv !== refId)))
+  }
+
   return (
       <Row>
         <StyledForm onSubmit={onSubmit}>
@@ -75,7 +89,7 @@ const TodoForm = ({ handleTodoCreate }) => {
           <div>
             <label htmlFor="todo-ref">먼저 해야할 일: </label>
             <StyledRefSelect id="todo-ref" onChange={onChangeSelect}>
-              <option selected disabled hidden>선택해주세요</option>
+              <option value="" disabled>선택해주세요</option>
               {todos.map(todo => {
                 return (
                     <option key={todo.id + '_' + todo.todo} value={todo.id}>{todo.id + ": " + todo.todo}</option>
@@ -85,7 +99,10 @@ const TodoForm = ({ handleTodoCreate }) => {
           </div>
           {[...ref].map(refId => {
             return (
-                <div key={refId}>@{refId}</div>
+                <div key={refId}>
+                  @{refId}
+                  <DeleteOutlined onClick={() => deleteTempRef(refId)} />
+                </div>
             )
           })}
           <Button type="primary" htmlType="submit"> {editingTodo.todo ? '수정' : '등록'}</Button>

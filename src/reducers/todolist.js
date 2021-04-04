@@ -51,6 +51,7 @@ const todolistSlice = createSlice({
         },
         clearUpdate: (state, action) => {
             state.editingTodo.todo = ''
+            state.editingTodo.id = ''
             state.editingTodo.ref = []
         }
     },
