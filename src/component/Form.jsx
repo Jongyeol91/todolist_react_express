@@ -1,93 +1,92 @@
-import React, { useState } from "react";
-import { Input, Form, Button, Row, Select } from 'antd';
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { Button, Row } from 'antd';
+import { useDispatch, useSelector } from "react-redux";
+import styled from 'styled-components'
+import useInput from "../hooks/useInput";
+import { clearUpdateActionCreator, getTodos, updateTodo } from "../reducers/todolist";
 
-const { Option } = Select;
+const StyledForm = styled('form')`
+     margin: 30px;
+  `;
 
-const TodoForm = ({ handleTodoCreate }) => {
-  const todos = useSelector(state => state.todos.todos)
+const StyledTodoInput = styled('input')`
+     margin-bottom: 10px;
+  `;
 
+const StyledRefSelect = styled('select')`
+     margin-bottom: 10px;
+  `;
+
+const TodoForm = ({handleTodoCreate}) => {
+  const dispatch = useDispatch();
+  const todos = useSelector(state => state.todos.todos);
+  const editingTodo = useSelector(state => state.todos.editingTodo);
+
+  const [todo, setTodo, onChangeTodo, todoErrMsg, resetTodo] = useInput({
+    type: 'kor',
+    maxLength: 20,
+    minLength: 2,
+    initialValue: '',
+  });
   const [ref, setRef] = useState(new Set());
 
-  const layout = {
-    labelCol: {
-      span: 8,
-    },
-    wrapperCol: {
-      span: 16,
-    },
-  };
-  const tailLayout = {
-    wrapperCol: {
-      offset: 8,
-      span: 16,
-    },
-  };
+  useEffect(() => {
+    if (editingTodo.todo) {
+      setTodo(editingTodo.todo)
+      setRef(previousState => new Set([...editingTodo.ref.split(',')]))
+    }
+  }, [editingTodo])
 
   // 셀렉박스 참조 선택
-  function handleChange(newRef) {
-      setRef(previousState => new Set([...ref, newRef]))
-    console.log(`selected ${newRef}`);
+  function handleChange(e) {
+    setRef(previousState => new Set([...ref, e.target.value]))
+    console.log(`selected ${e.target.value}`);
   }
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!editingTodo.todo) {
+      handleTodoCreate(todo, ref);
+    } else {
+      await dispatch(updateTodo({id: editingTodo.id, todo: todo, ref: [...ref]}));
+      dispatch(getTodos());
+    }
+    onCancelEditing();
+  }
 
-  const onFinish = (values) => {
-    handleTodoCreate(values.todo, ref, values.completed);
+  const onCancelEditing = () => {
+    dispatch(clearUpdateActionCreator());
+    resetTodo();
     setRef(new Set());
   }
 
-
-  const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
-  };
-
   return (
       <Row>
-        <Form
-            {...layout}
-            name="basic"
-            initialValues={{
-              remember: true,
-            }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-        >
-          <Form.Item
-              label="할일"
-              name="todo"
-              rules={[
-                {
-                  required: true,
-                  message: '해야할 일을 입력',
-                },
-              ]}
-          >
-            <Input/>
-          </Form.Item>
-          <Form.Item
-              label="참조"
-              name="ref"
-          >
-            <Select defaultValue='없음' style={{ width: 120 }} onChange={handleChange}>
-              {todos.map(cv => {
+        <StyledForm onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="todo">할 일: </label>
+            <StyledTodoInput value={todo} onChange={onChangeTodo} minLength={2} maxLength={10}/>
+            {todoErrMsg}
+          </div>
+          <div>
+            <label htmlFor="todo-ref">먼저 해야할 일: </label>
+            <StyledRefSelect id="todo-ref" onChange={handleChange}>
+              <option selected disabled hidden>선택해주세요</option>
+              {todos.map(todo => {
                 return (
-                  <Option key={cv.id + '_' + cv.todo} value={cv.id}>{cv.id + ": " + cv.todo}</Option>
+                    <option key={todo.id + '_' + todo.todo} value={todo.id}>{todo.id + ": " + todo.todo}</option>
                 )
               })}
-            </Select>
-            {[...ref].map(cv => {
-            return(
-                <div>@{cv}</div>
+            </StyledRefSelect>
+          </div>
+          {[...ref].map(refId => {
+            return (
+                <div key={refId}>@{refId}</div>
             )
-            })}
-          </Form.Item>
-
-          <Form.Item {...tailLayout}>
-            <Button type="primary" htmlType="submit">
-              저장
-            </Button>
-          </Form.Item>
-        </Form>
+          })}
+          <Button type="primary" htmlType="submit"> {editingTodo.todo ? '수정' : '등록'}</Button>
+          {editingTodo.todo && (<Button onClick={onCancelEditing}>취소</Button>)}
+        </StyledForm>
       </Row>
   )
 }

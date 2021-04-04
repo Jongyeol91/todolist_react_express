@@ -1,17 +1,20 @@
 import React from 'react';
-import {Row, Col, Input } from "antd";
+import styled from 'styled-components'
+
+const StyledSearchInputWrapper = styled('div')`
+     margin: 20px;
+  `;
 
 const Search = ({ todos, setSearchTerm }) => {
-
   const onChangeSearchTerm = (e) => {
     setSearchTerm(e.target.value);
   }
 
   return(
-    <Row>
+    <StyledSearchInputWrapper>
       검색:
       <input type='text' onChange={onChangeSearchTerm}/>
-    </Row>
+    </StyledSearchInputWrapper>
   )
 }
 

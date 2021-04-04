@@ -22,6 +22,7 @@ exports.todolistAll = async (req, res) => {
 
 // Create new todolist
 exports.todolistCreate = async (req, res) => {
+  console.log("create: req.body", req.body);
   // Add new todolist to database
   knex('todolist')
     .insert({ // insert new record, a book
@@ -57,10 +58,10 @@ exports.todolistDelete = async (req, res) => {
 
 // update todolist
 exports.todolistUpdate = async (req, res) => {
-  console.log(req.body)
+  console.log("update: req.body", req.body);
   knex('todolist')
     .where('id', req.body.id)
-    .update({'completed': req.body.completed})
+    .update({'todo': req.body.todo, 'ref': req.body.ref})
     .then(() => {
       // Send a success message in response
       res.json({ message: 'todolist updated.' })

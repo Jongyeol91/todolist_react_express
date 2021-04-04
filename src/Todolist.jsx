@@ -33,9 +33,9 @@ const Todolist = () => {
   }
 
   // Create new todo
-  const handleTodoCreate = useCallback(async (todo, ref, completed) => {
-    console.log(ref)
-    const data = {todo, ref, completed}
+  const handleTodoCreate = useCallback(async (todo, ref) => {
+    const data = {todo, ref}
+    console.log('data', data)
     await dispatch(createTodo(data));
     dispatch(getTodos());
   }, [todos]);
