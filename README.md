@@ -13,6 +13,9 @@ client
 
 ### PULL 안될경우
 - server/db/database.sqlite 삭제 후 pull
+
+### CLONE 후 NPM INSTALL 안될경우 혹은 서버 실행 안될 경우
+- npm install node-pre-gyp
  
 ### 구현내용
 - 투두리스트 read, create, delete, complete, update
