@@ -3,12 +3,12 @@
 - root에서 npm install 명령어를 통하여 노드 모듈 설치
 
 client 실행 방법  
- - 실행위치: root  
- - 싱행 명령어: npm run start-front
+ - 실행위치: **root**  
+ - 싱행 명령어: **npm run start-front**
  
 server 실행 방법 
- - 실행 위치: root  
- - 실행 명령어: npm run start-server
+ - 실행 위치: **root**  
+ - 실행 명령어: **npm run start-server**
 
 ### PULL 안될경우
 - server/db/database.sqlite 삭제 후 pull
