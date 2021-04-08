@@ -1,21 +1,19 @@
-## 실행 방법
+## 실행 방법  
+- git clone
+- root에서 npm install 명령어를 통하여 노드 모듈 설치
 
-실행 전 설정   
-- npm install 명령어를 통하여 노드 모듈 설치
-
-client   
+client 실행 방법  
  - 실행위치: root  
  - 싱행 명령어: npm run start-front
  
- server  
+server 실행 방법 
  - 실행 위치: root  
  - 실행 명령어: npm run start-server
 
 ### PULL 안될경우
 - server/db/database.sqlite 삭제 후 pull
-
-### CLONE 후 NPM INSTALL 안될경우 혹은 서버 실행 안될 경우
-- npm install node-pre-gyp
+- npm install
+- 그래도 안되면 clone 
  
 ### 구현내용
 - 투두리스트 read, create, delete, complete, update
