@@ -15,9 +15,10 @@ const Todo = ({ todo, handleTodoCompletion, handleTodoDelete }) => {
     handleTodoDelete(todo.id, todo.ref);
   }
 
-  const onUpdate = () => {
-    dispatch(getUpdateTodoActionCreator({id: todo.id, todo: todo.todo, ref: todo.ref}));
-  }
+    const onUpdate = () => {
+        window.scrollTo(0, 0)
+        dispatch(getUpdateTodoActionCreator({id: todo.id, todo: todo.todo, ref: todo.ref}));
+    }
 
   return (
       <Row>
@@ -25,7 +26,8 @@ const Todo = ({ todo, handleTodoCompletion, handleTodoDelete }) => {
         <Card title={todo.id + '. ' + todo.todo}>
           <p>{todo.ref.length > 0 && <span>{todo.ref.split(',').map(cv => (<span>@{cv} </span>))}</span>}</p>
           완료: <Checkbox checked={todo.completed} onChange={onTodoCompletion}/>
-          <p>작성일:{moment(todo.createdAt).format('YYYY-MM-DD')}</p>
+          <p>작성일:{moment.utc(todo.createdAt).local().format('YYYY-MM-DD hh:mm')}</p>
+          <p>{todo.updatedAt && '수정일:' + moment.utc(todo.updatedAt).local().format('YYYY-MM-DD hh:mm')}</p>
           <Button onClick={onRemove}>삭제</Button>
           <Button onClick={onUpdate}>수정</Button>
         </Card>

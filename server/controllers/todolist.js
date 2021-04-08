@@ -62,6 +62,7 @@ exports.todolistComplete = async (req, res) => {
   knex('todolist')
       .where('id', req.body.id)
       .update({'completed': req.body.completed})
+      .update('updatedAt', knex.fn.now())
       .then(() => {
         // Send a success message in response
         res.json({ message: 'todolist completed.' })
@@ -78,6 +79,7 @@ exports.todolistUpdate = async (req, res) => {
   knex('todolist')
     .where('id', req.body.id)
     .update({'todo': req.body.todo, 'ref': req.body.ref})
+    .update('updatedAt', knex.fn.now())
     .then(() => {
       // Send a success message in response
       res.json({ message: 'todolist updated.' })

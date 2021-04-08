@@ -30,6 +30,7 @@ knex.schema
         table.string('ref');
         table.string('todo');
         table.integer('completed');
+        table.timestamp('updatedAt',{useTz: true});
         table.timestamp('createdAt').defaultTo(knex.fn.now());
       })
         .then(() => {
