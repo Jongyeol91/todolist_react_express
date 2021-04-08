@@ -28,8 +28,12 @@
     "styled-components": "^5.2.1",
     "web-vitals": "^1.1.0"
   },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  },
   "scripts": {
-    "start-server": "nodemon node server/server.js --watch server/*",
+    "start-server-dev": "nodemon node server/server.js --watch server/*",
+    "start-server": "node server/server.js",
     "start-front": "react-scripts start",
     "start": "concurrently \"npm run start-server\" \"npm run start-front\" --kill-others --kill-others-on-fail",
     "build": "react-scripts build",
